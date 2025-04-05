@@ -1,0 +1,11 @@
+<h1>Successfully booked!</h1>
+<h2>Flight: <%= "From: " + @flight.departure_airport.code + ", To: " + @flight.arrival_airport.code + ", At: " + @flight.start_date.strftime("%d/%m/%Y - %H:%M:%S") %></h2>
+<h3>For:</h3>
+<ol>
+    <% @passengers.each do |passenger| %>
+    <li>
+        Name: <%= passenger.name %>, Email: <%= passenger.email %>
+    </li>
+    <% end %>
+</ol>
+

@@ -1,0 +1,12 @@
+<h1>Almost there!</h1>
+<p>Booking: <%= "From: " + @flight.departure_airport.code + ", To: " + @flight.arrival_airport.code + ", At: " + @flight.start_date.strftime("%d/%m/%Y - %H:%M:%S") %></p>
+<%= form_with model: @new_booking, url: "/bookings/create", method: :post do |f| %>
+    <%= f.hidden_field :flight_id, value: @flight.id %>
+    <%= f.fields_for :passengers do |passenger_form| %>
+        <%= passenger_form.label :name, "Name" %>
+        <%= passenger_form.text_field :name %>
+        <%= passenger_form.label :email, "Email" %>
+        <%= passenger_form.text_field :email %>
+    <% end %>
+    <%= f.submit %>
+<% end %>

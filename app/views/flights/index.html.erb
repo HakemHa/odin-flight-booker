@@ -1,0 +1,32 @@
+<h1>Search a flights</h1>
+<%= form_with scope: :flight, url: "/flights/index", method: :get do |f| %>
+    <%= f.label :departure_id, "Select departure airport" %>
+    <%= select_tag(:departure_id, options_for_select(@airport_options)) %>
+    <%= f.label :arrival_id, "Select arrival airport" %>
+    <%= select_tag(:arrival_id, options_for_select(@airport_options)) %>
+    <%= f.label :passengers, "Select number of passengers" %>
+    <%= select_tag(:passengers, options_for_select([[1, 1], [2, 2], [3, 3], [4, 4]])) %>
+    <%= f.label :date, "Select date of flight" %>
+    <%= select_tag(:date, options_for_select(@available_dates)) %>
+    <%= f.submit "Search" %>
+<% end %>
+<% if @flight_options.length == 0 %>
+    <h2>No Available Flights</h2>
+<% elsif params.key?("departure_id") && params.key?("arrival_id") && params.key?("date") %>
+    <h2>Select flight:</h2>
+    <%= form_with scope: :flight, url: "/bookings/new", method: :get do |f| %>
+        <%= f.hidden_field :passengers, value: params[:passengers] %>
+        <%= f.collection_radio_buttons :flight_id, @flight_options.map { |f| [f.id, "From: " + f.departure_airport.code + ", To: " + f.arrival_airport.code + ", At: " + f.start_date.strftime("%d/%m/%Y - %H:%M:%S") ]}, :first, :last, options: {required: true}  %>
+        <%= f.submit "Book Flight" %>
+    <% end %>
+<% else %>
+    <h2>Available flights:</h2>
+    <ol>
+        <% @flight_options.each do |flight| %>
+        <li>
+            <%= "From: " + flight.departure_airport.code + ", To: " + flight.arrival_airport.code + ", At: " + flight.start_date.strftime("%d/%m/%Y - %H:%M:%S") %>
+        </li>
+        <% end %>
+    </ol>
+<% end %>
+
