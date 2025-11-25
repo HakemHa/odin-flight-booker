@@ -10,11 +10,12 @@ class BookingsController < ApplicationController
     @new_booking = Booking.new(flight_id: params["booking"]["flight_id"])
     if @new_booking.save
       params["booking"]["passengers_attributes"].each do |k, v|
-        Passenger.create(
+        newPassenger = Passenger.create(
           name: v["name"],
           email: v["email"],
           booking_id: @new_booking.id
         )
+        PassengerMailer.with(passenger: newPassenger).confirmation_email.deliver_now
       end
       redirect_to bookings_show_path, flash: { booking_id: @new_booking.id }
     else
